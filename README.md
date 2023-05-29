@@ -13,5 +13,5 @@ api.NewClient(accessCode).
         []api.ChatMessage{
             {Role: "user", Content: content},
         }).
-    DoWithCallback(cb.CopyToStdio)
+    DoWithCallback(cb.Output)
 ```
