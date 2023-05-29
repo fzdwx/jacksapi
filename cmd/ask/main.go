@@ -18,10 +18,11 @@ func main() {
 		content    = strings.Join(os.Args[1:], " ")
 		accessCode = os.Getenv("EMM_API_KEY")
 	)
+	fmt.Println("Your ask:", content)
 	api.NewClient(accessCode).
 		ChatStream(
 			[]api.ChatMessage{
 				{Role: "user", Content: content},
 			}).
-		DoWithCallback(cb.CopyToStdio)
+		DoWithCallback(cb.Output)
 }

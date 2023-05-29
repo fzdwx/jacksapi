@@ -1,6 +1,6 @@
 # Jack's ChatGpt api client
 
-Is a simple client for the https://chat-one.emmmm.dev/ .
+It's a simple client for the https://chat-one.emmmm.dev/ .
 
 ```go
 var (
