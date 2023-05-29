@@ -23,41 +23,43 @@ var (
 		},
 		Run: func(cmd *cobra.Command, args []string) {
 			g := gin.Default()
-			g.POST("/", func(context *gin.Context) {
+			g.POST("/v1/chat/completions", func(c *gin.Context) {
 				var body api.Body
-				err := context.ShouldBind(&body)
+				err := c.ShouldBind(&body)
 				if err != nil {
-					context.Writer.WriteHeader(http.StatusInternalServerError)
-					_, _ = fmt.Fprintf(context.Writer, "Error: %s", err.Error())
+					c.Writer.WriteHeader(http.StatusInternalServerError)
+					_, _ = fmt.Fprintf(c.Writer, "Error: %s", err.Error())
 					return
 				}
 
+				c.Header("Connection", "keep-alive")
+				c.Header("Transfer-Encoding", "chunked")
 				var (
-					rchan    = make(chan rune)
+					rchan    = make(chan rune, 1000)
 					doneChan = make(chan bool)
 				)
 
-				go func() {
-					client.ChatStream(body.Messages).
-						Temperature(body.Temperature).
-						PresencePenalty(body.PresencePenalty).
-						DoWithCallback(cb.With(func(r rune, done bool, err error) {
-							if done || err != nil {
-								doneChan <- true
-								return
-							}
-							rchan <- r
-						}))
-				}()
+				go client.ChatStream(body.Messages).
+					Temperature(body.Temperature).
+					PresencePenalty(body.PresencePenalty).
+					DoWithCallback(cb.With(func(r rune, done bool, err error) {
+						if done || err != nil {
+							doneChan <- true
+							return
+						}
+						rchan <- r
+					}))
 
-				context.Stream(func(w io.Writer) bool {
-					select {
-					case r := <-rchan:
-						fmt.Println("rune:", string(r))
-						context.SSEvent("message", string(r))
-						return true
-					case <-doneChan:
-						return false
+				c.Stream(func(w io.Writer) bool {
+					for {
+						select {
+						case r := <-rchan:
+							c.SSEvent("", string(r))
+							fmt.Println(string(r))
+						case <-doneChan:
+							c.SSEvent("", "done")
+							return false
+						}
 					}
 				})
 
