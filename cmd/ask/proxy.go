@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/fzdwx/jacksapi/api"
-	"github.com/fzdwx/jacksapi/cb"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"io"
@@ -12,9 +11,9 @@ import (
 )
 
 var (
-	proxyCmd = &cobra.Command{
-		Use:   "proxy [port]",
-		Short: "Proxy ChatGpt api",
+	serverCmd = &cobra.Command{
+		Use:   "server [port]",
+		Short: "provide chatGpt api",
 		PreRun: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
 				fmt.Println("Please input your port")
@@ -23,7 +22,7 @@ var (
 		},
 		Run: func(cmd *cobra.Command, args []string) {
 			g := gin.Default()
-			g.POST("/v1/chat/completions", func(c *gin.Context) {
+			g.POST("/", func(c *gin.Context) {
 				var body api.Body
 				err := c.ShouldBind(&body)
 				if err != nil {
@@ -32,36 +31,12 @@ var (
 					return
 				}
 
-				c.Header("Connection", "keep-alive")
-				c.Header("Transfer-Encoding", "chunked")
-				var (
-					rchan    = make(chan rune, 1000)
-					doneChan = make(chan bool)
-				)
-
-				go client.ChatStream(body.Messages).
+				client.ChatStream(body.Messages).
 					Temperature(body.Temperature).
 					PresencePenalty(body.PresencePenalty).
-					DoWithCallback(cb.With(func(r rune, done bool, err error) {
-						if done || err != nil {
-							doneChan <- true
-							return
-						}
-						rchan <- r
-					}))
-
-				c.Stream(func(w io.Writer) bool {
-					for {
-						select {
-						case r := <-rchan:
-							c.SSEvent("", string(r))
-							fmt.Println(string(r))
-						case <-doneChan:
-							c.SSEvent("", "done")
-							return false
-						}
-					}
-				})
+					DoWithCallback(func(resp *http.Response, err error) {
+						io.Copy(c.Writer, resp.Body)
+					})
 
 			})
 
@@ -71,5 +46,5 @@ var (
 )
 
 func init() {
-	root.AddCommand(proxyCmd)
+	root.AddCommand(serverCmd)
 }

@@ -15,3 +15,13 @@ api.NewClient(accessCode).
         }).
     DoWithCallback(cb.Output)
 ```
+
+
+## Usage
+
+```shell
+ask how are you
+
+ask server 1333 
+curl -X POST -H "Content-Type: application/json" -d '{"messages":[{"role":"user","content":"how are you"}]}' http://localhost:1333 
+```
