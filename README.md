@@ -20,8 +20,12 @@ api.NewClient(accessCode).
 ## Usage
 
 ```shell
+# ask chatgpt how are you
 ask how are you
 
+# start api server
 ask server 1333 
-curl -X POST -H "Content-Type: application/json" -d '{"messages":[{"role":"user","content":"how are you"}]}' http://localhost:1333 
+curl -X POST -H "Content-Type: application/json" \ 
+     -d '{"messages":[{"role":"user","content":"how are you"}]}' \
+     http://localhost:1333 
 ```
