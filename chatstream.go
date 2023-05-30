@@ -12,6 +12,7 @@ type ChatStream struct {
 	presencePenalty float64
 	message         []ChatMessage
 	c               *Client
+	stream          bool
 }
 
 func (c *ChatStream) Temperature(temperature float64) *ChatStream {
@@ -61,7 +62,7 @@ func (c *ChatStream) DoWithCallback(callback Callback) {
 func (c *ChatStream) buildBody() (io.Reader, error) {
 	body := Body{
 		Messages:        c.message,
-		Stream:          true,
+		Stream:          c.stream,
 		Model:           c.c.Model,
 		Temperature:     c.temperature,
 		PresencePenalty: c.presencePenalty,
@@ -71,4 +72,9 @@ func (c *ChatStream) buildBody() (io.Reader, error) {
 		return nil, err
 	}
 	return bytes.NewBuffer(b), nil
+}
+
+func (c *ChatStream) Stream(b bool) *ChatStream {
+	c.stream = b
+	return c
 }

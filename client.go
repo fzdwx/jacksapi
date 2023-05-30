@@ -26,9 +26,10 @@ func NewClient(accessCode string) *Client {
 func (c *Client) ChatStream(messages []ChatMessage) *ChatStream {
 	return &ChatStream{
 		temperature:     1.0,
-		presencePenalty: 0.2,
+		presencePenalty: 1.0,
 		message:         messages,
 		c:               c,
+		stream:          true,
 	}
 }
 

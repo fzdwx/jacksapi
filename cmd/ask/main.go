@@ -41,6 +41,7 @@ func ask() {
 	)
 	client.ChatStream(
 		[]ai.ChatMessage{
+			{Role: "system", Content: "Format the response as Markdown."},
 			{Role: "user", Content: content},
 		}).
 		DoWithCallback(ai.Output)
