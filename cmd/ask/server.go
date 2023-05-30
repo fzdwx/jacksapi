@@ -3,8 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/fzdwx/jacksapi/api"
-	"github.com/fzdwx/jacksapi/cb"
+	"github.com/fzdwx/jacksapi"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"io"
@@ -39,7 +38,7 @@ func init() {
 }
 
 func handle(c *gin.Context) {
-	var body api.Body
+	var body ai.Body
 	err := c.ShouldBind(&body)
 	if err != nil {
 		c.Writer.WriteHeader(http.StatusInternalServerError)
@@ -57,7 +56,7 @@ func handle(c *gin.Context) {
 }
 
 func handleMockOpenAi(c *gin.Context) {
-	var body api.Body
+	var body ai.Body
 	err := c.ShouldBind(&body)
 	if err != nil {
 		c.Writer.WriteHeader(http.StatusInternalServerError)
@@ -72,11 +71,11 @@ func handleMockOpenAi(c *gin.Context) {
 		client.ChatStream(body.Messages).
 			Temperature(body.Temperature).
 			PresencePenalty(body.PresencePenalty).
-			DoWithCallback(cb.With(func(r rune, done bool, err error) {
+			DoWithCallback(ai.With(func(r rune, done bool, err error) {
 				if done || err != nil {
-					c.SSEvent("", " [DONE]")
+					c.SSEvent("", "[DONE]")
 				} else {
-					c.SSEvent("", " "+buildMessage(r, id, created, body.Model))
+					c.SSEvent("", buildMessage(r, id, created, body.Model))
 					c.Writer.Flush()
 				}
 			}))

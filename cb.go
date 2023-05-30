@@ -1,9 +1,8 @@
-package cb
+package ai
 
 import (
 	"bufio"
 	"fmt"
-	"github.com/fzdwx/jacksapi/api"
 	"net/http"
 )
 
@@ -19,7 +18,7 @@ func Output(resp *http.Response, err error) {
 	})(resp, err)
 }
 
-func With(f func(r rune, done bool, err error)) api.Callback {
+func With(f func(r rune, done bool, err error)) Callback {
 	return func(resp *http.Response, err error) {
 		if err != nil {
 			panic(err)

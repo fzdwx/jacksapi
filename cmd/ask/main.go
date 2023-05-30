@@ -2,15 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/fzdwx/jacksapi/api"
-	"github.com/fzdwx/jacksapi/cb"
+	"github.com/fzdwx/jacksapi"
 	"github.com/spf13/cobra"
 	"os"
 	"strings"
 )
 
 var (
-	client = api.NewClient(os.Getenv("EMM_API_KEY"))
+	client = ai.NewClient(os.Getenv("EMM_API_KEY"))
 
 	root = cobra.Command{
 		Use:   "ask",
@@ -26,10 +25,10 @@ var (
 				content = strings.Join(args, " ")
 			)
 			client.ChatStream(
-				[]api.ChatMessage{
+				[]ai.ChatMessage{
 					{Role: "user", Content: content},
 				}).
-				DoWithCallback(cb.Output)
+				DoWithCallback(ai.Output)
 		}}
 )
 
