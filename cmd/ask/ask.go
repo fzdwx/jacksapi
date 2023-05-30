@@ -30,7 +30,7 @@ func ask() {
 		[]ai.ChatMessage{
 			{Role: "system", Content: "Format the response as Markdown."},
 			{Role: "user", Content: content},
-		})
+		}).Stream(false)
 
 	m := &model{chatStream: stream}
 	p := tea.NewProgram(m)
@@ -53,6 +53,7 @@ type model struct {
 	showSpinner bool // Whether or not to show the spinner
 	w           int
 	h           int
+	err         error
 }
 
 type start struct{}
@@ -84,6 +85,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, m.start()
 	case stop:
 		m.showSpinner = false
+		m.err = msg.err
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "q", "ctrl+c":
@@ -112,6 +114,10 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *model) View() string {
+	if m.err != nil {
+		return fmt.Sprintf("Error: %s", m.err)
+	}
+
 	if m.showSpinner {
 		return lipgloss.NewStyle().Width(m.w).Height(m.h).Align(lipgloss.Center, lipgloss.Center).Render(m.spinner.View())
 	}
