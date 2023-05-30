@@ -6,11 +6,13 @@ It's a simple client for the https://chat-one.emmmm.dev/ .
 
 ## Usage
 
-with lib:
+### lib
 
 ```shell
 go get github.com/fzdwx/jacksapi@latest
 ```
+
+code:
 
 ```go
 var (
@@ -27,11 +29,13 @@ api.NewClient(accessCode).
 ```
 
 
-with cli:
+### cli
 
 ```shell
 go install github.com/fzdwx/jacksapi/cmd/ask@latest
 ```
+
+command:
 
 ```shell
 # ask chatgpt how are you
