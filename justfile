@@ -6,3 +6,6 @@ update:
 
 install:
   cd cmd/ask && go install .
+
+gif:
+    vhs .github/ask.tape -o .github/ask.gif

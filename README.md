@@ -2,6 +2,12 @@
 
 It's a simple client for the https://chat-one.emmmm.dev/ .
 
+![](.github/ask.gif)
+
+## Usage
+
+with lib:
+
 ```go
 var (
     content    = strings.Join(os.Args[1:], " ")
@@ -17,7 +23,7 @@ api.NewClient(accessCode).
 ```
 
 
-## Usage
+with cli:
 
 ```shell
 # ask chatgpt how are you

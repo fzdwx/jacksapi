@@ -51,6 +51,8 @@ type model struct {
 	content *bytes.Buffer
 
 	showSpinner bool // Whether or not to show the spinner
+	w           int
+	h           int
 }
 
 type start struct{}
@@ -74,6 +76,8 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.viewport.Width = msg.Width
 		m.viewport.Height = msg.Height
+		m.w = msg.Width
+		m.h = msg.Height
 		cmds = append(cmds, m.flush())
 	case start:
 		m.showSpinner = true
@@ -109,7 +113,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m *model) View() string {
 	if m.showSpinner {
-		return m.spinner.View()
+		return lipgloss.NewStyle().Width(m.w).Height(m.h).Align(lipgloss.Center, lipgloss.Center).Render(m.spinner.View())
 	}
 
 	return m.viewport.View()
