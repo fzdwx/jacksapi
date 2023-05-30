@@ -8,6 +8,10 @@ It's a simple client for the https://chat-one.emmmm.dev/ .
 
 with lib:
 
+```shell
+go get github.com/fzdwx/jacksapi@latest
+```
+
 ```go
 var (
     content    = strings.Join(os.Args[1:], " ")
@@ -24,6 +28,10 @@ api.NewClient(accessCode).
 
 
 with cli:
+
+```shell
+go install github.com/fzdwx/jacksapi/cmd/ask@latest
+```
 
 ```shell
 # ask chatgpt how are you

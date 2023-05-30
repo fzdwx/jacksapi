@@ -17,7 +17,7 @@ var (
 )
 
 func main() {
-	if os.Args[1] != "server" {
+	if len(os.Args) == 0 || os.Args[1] != "server" {
 		ask()
 		return
 	}
