@@ -5,7 +5,6 @@ import (
 	"github.com/fzdwx/jacksapi"
 	"github.com/spf13/cobra"
 	"os"
-	"strings"
 )
 
 var (
@@ -28,21 +27,4 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-}
-
-func ask() {
-	if len(os.Args) == 1 {
-		fmt.Println("Please input your ask")
-		os.Exit(1)
-	}
-
-	var (
-		content = strings.Join(os.Args[1:], " ")
-	)
-	client.ChatStream(
-		[]ai.ChatMessage{
-			{Role: "system", Content: "Format the response as Markdown."},
-			{Role: "user", Content: content},
-		}).
-		DoWithCallback(ai.Output)
 }
