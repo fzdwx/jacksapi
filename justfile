@@ -13,9 +13,9 @@ gif:
 # release, e.g `just release v0.12`
 release version:
     sed -i 's/Version = ".*"/Version = "{{version}}"/' ./cmd/ask/const.go
-    git tag {{version}}
     git add .
     git commit -m "release {{version}}"
     git push
+    git tag {{version}}
     git push --tags
     goreleaser release
