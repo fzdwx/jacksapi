@@ -22,10 +22,10 @@ var (
 
 jacksapi.NewClient(accessCode).
     ChatStream(
-        []api.ChatMessage{
+        []jacksapi.ChatMessage{
             {Role: "user", Content: content},
         }).
-    DoWithCallback(cb.Output)
+    DoWithCallback(jacksapi.Output)
 ```
 
 

@@ -8,7 +8,7 @@ import (
 	"github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
-	ai "github.com/fzdwx/jacksapi"
+	"github.com/fzdwx/jacksapi"
 	"github.com/lucasb-eyer/go-colorful"
 	"github.com/muesli/termenv"
 	"math/rand"
@@ -27,7 +27,7 @@ func ask() {
 		content = strings.Join(os.Args[1:], " ")
 	)
 	stream := client.ChatStream(
-		[]ai.ChatMessage{
+		[]jacksapi.ChatMessage{
 			{Role: "system", Content: "Format the response as Markdown."},
 			{Role: "user", Content: content},
 		})
@@ -42,7 +42,7 @@ func ask() {
 }
 
 type model struct {
-	chatStream *ai.ChatStream
+	chatStream *jacksapi.ChatStream
 
 	viewport viewport.Model
 	spinner  tea.Model
@@ -127,7 +127,7 @@ func (m *model) View() string {
 
 func (m *model) start() tea.Cmd {
 	return func() tea.Msg {
-		go m.chatStream.DoWithCallback(ai.With(func(r rune, done bool, err error) {
+		go m.chatStream.DoWithCallback(jacksapi.With(func(r rune, done bool, err error) {
 			if err != nil || done {
 				m.p.Send(stop{err})
 				return
