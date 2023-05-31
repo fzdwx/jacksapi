@@ -21,7 +21,7 @@ func Output(resp *http.Response, err error) {
 func With(f func(r rune, done bool, err error)) Callback {
 	return func(resp *http.Response, err error) {
 		if err != nil {
-			panic(err)
+			f(-1, false, err)
 		}
 		defer resp.Body.Close()
 		reader := bufio.NewReader(resp.Body)
