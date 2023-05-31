@@ -20,7 +20,7 @@ var (
     accessCode = os.Getenv("EMM_API_KEY")
 )
 
-api.NewClient(accessCode).
+jacksapi.NewClient(accessCode).
     ChatStream(
         []api.ChatMessage{
             {Role: "user", Content: content},

@@ -38,7 +38,7 @@ func init() {
 }
 
 func handle(c *gin.Context) {
-	var body ai.Body
+	var body jacksapi.Body
 	err := c.ShouldBind(&body)
 	if err != nil {
 		c.Writer.WriteHeader(http.StatusInternalServerError)
@@ -56,7 +56,7 @@ func handle(c *gin.Context) {
 }
 
 func handleMockOpenAi(c *gin.Context) {
-	var body ai.Body
+	var body jacksapi.Body
 	err := c.ShouldBind(&body)
 	if err != nil {
 		c.Writer.WriteHeader(http.StatusInternalServerError)
@@ -71,7 +71,7 @@ func handleMockOpenAi(c *gin.Context) {
 		client.ChatStream(body.Messages).
 			Temperature(body.Temperature).
 			PresencePenalty(body.PresencePenalty).
-			DoWithCallback(ai.With(func(r rune, done bool, err error) {
+			DoWithCallback(jacksapi.With(func(r rune, done bool, err error) {
 				if done || err != nil {
 					c.SSEvent("", "[DONE]")
 				} else {

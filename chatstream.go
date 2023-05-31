@@ -1,4 +1,4 @@
-package ai
+package jacksapi
 
 import (
 	"bytes"

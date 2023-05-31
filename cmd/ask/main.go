@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	client = ai.NewClient(os.Getenv("EMM_API_KEY"))
+	client = jacksapi.NewClient(os.Getenv("EMM_API_KEY"))
 
 	root = cobra.Command{
 		Use:   "ask <question>",
