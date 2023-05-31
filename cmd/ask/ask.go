@@ -30,7 +30,7 @@ func ask() {
 		[]ai.ChatMessage{
 			{Role: "system", Content: "Format the response as Markdown."},
 			{Role: "user", Content: content},
-		}).Stream(false)
+		})
 
 	m := &model{chatStream: stream}
 	p := tea.NewProgram(m)
