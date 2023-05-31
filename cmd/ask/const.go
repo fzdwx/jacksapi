@@ -1,6 +1,6 @@
 package main
 
 var (
-	Version = ""
+	Version = "v0.1.0"
 	KeyName = "EMM_API_KEY"
 )
