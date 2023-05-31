@@ -18,4 +18,5 @@ release version:
     git push
     git tag {{version}}
     git push --tags
+    rm -rf dist
     goreleaser release
