@@ -10,6 +10,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/fzdwx/jacksapi"
 	"github.com/lucasb-eyer/go-colorful"
+	"github.com/muesli/reflow/wrap"
 	"github.com/muesli/termenv"
 	"math/rand"
 	"os"
@@ -33,7 +34,7 @@ func ask() {
 		})
 
 	m := &model{chatStream: stream}
-	p := tea.NewProgram(m)
+	p := tea.NewProgram(m, tea.WithMouseAllMotion())
 	m.p = p
 	_, err := p.Run()
 	if err != nil {
@@ -142,17 +143,22 @@ func (m *model) start() tea.Cmd {
 func (m *model) flush() tea.Cmd {
 	return func() tea.Msg {
 		go func() {
-			content, _ := newRender(m.viewport.Width).Render(m.content.String())
+			content, _ := newRender().Render(wrapString(m.content.String(), m.w-4))
 			m.p.Send(setViewportContent{content})
 		}()
 		return nil
 	}
 }
 
-func newRender(wordWrap int) *glamour.TermRenderer {
+func wrapString(s string, w int) string {
+	return wrap.String(s, w)
+}
+
+func newRender() *glamour.TermRenderer {
 	renderer, _ := glamour.NewTermRenderer(
 		glamour.WithAutoStyle(),
-		glamour.WithWordWrap(wordWrap),
+		glamour.WithEnvironmentConfig(),
+		glamour.WithWordWrap(0),
 		glamour.WithEmoji(),
 	)
 	return renderer
