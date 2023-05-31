@@ -18,3 +18,4 @@ release version:
     git commit -m "release {{version}}"
     git push
     git push --tags
+    goreleaser release
