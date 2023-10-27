@@ -37,6 +37,9 @@ func (c *ChatStream) Model(model string) *ChatStream {
 
 func (c *ChatStream) Do() (*http.Response, error) {
 	client := http.DefaultClient
+	client.Transport = &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+	}
 	body, err := c.buildBody()
 	if err != nil {
 		return nil, err
